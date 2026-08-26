@@ -1,0 +1,10 @@
+# Java / Maven
+backend/target/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
