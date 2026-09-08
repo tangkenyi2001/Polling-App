@@ -8,7 +8,7 @@ choice, rating, and word cloud.
 
 - **Backend** — Java 21+, Spring Boot (Web MVC, Data JPA, Validation), PostgreSQL
 - **Frontend** — React + Vite (`frontend/poll-project`)
-- **Real-time updates** — Server-Sent Events (see [`sse-design.md`](sse-design.md))
+- **Real-time updates** — Server-Sent Events (see [`sse-design.md`](docs/sse-design.md))
 
 ## Project structure
 
@@ -79,5 +79,5 @@ Poll results update live via Server-Sent Events rather than WebSockets or
 polling — the data only ever needs to flow server → client, so SSE gives
 push-latency updates over plain HTTP with free browser reconnect, no socket
 management on either side. Full design rationale, flow diagram, and known
-limitations are in [`sse-design.md`](sse-design.md); the data model is in
-[`erd.puml`](erd.puml) and [`backend/SCHEMA.md`](backend/SCHEMA.md).
+limitations are in [`sse-design.md`](docs/sse-design.md); the data model is in
+[`erd.puml`](docs/erd.puml) and [`backend/SCHEMA.md`](backend/SCHEMA.md).
