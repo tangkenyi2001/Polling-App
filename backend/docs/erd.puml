@@ -1,0 +1,97 @@
+@startuml
+
+entity User {
+  * id : Long <<PK>>
+  --
+  email : String <<unique>>
+  passwordHash : String
+  lastLogin : LocalDateTime
+  createdAt : LocalDateTime
+}
+
+entity Poll {
+  * id : Long <<PK>>
+  --
+  owner_id : Long <<FK>>
+  question : String
+  type : PollType
+  createdAt : Instant
+  expiryDate : Instant
+}
+
+enum PollType {
+  MCQ
+  RATING
+  WORDCLOUD
+}
+
+entity MCQPoll {
+  * pollId : Long <<PK, FK>>
+  --
+  allowMultipleAnswers : boolean
+}
+
+entity RatingPoll {
+  * pollId : Long <<PK, FK>>
+  --
+  maxRating : Integer
+  minRating : Integer
+}
+
+entity WordCloudPoll {
+  * pollId : Long <<PK, FK>>
+  --
+  maxWords : Integer
+}
+
+entity MCQOption {
+  * id : Long <<PK>>
+  --
+  poll_id : Long <<FK>>
+  value : String
+}
+
+entity Response {
+  * id : Long <<PK>>
+  --
+  poll_id : Long <<FK>>
+  user_id : Long <<FK, nullable>>
+  responseTime : Instant
+}
+
+entity MCQResponse {
+  * id : Long <<PK, FK>>
+  --
+  mcq_option_id : Long <<FK>>
+}
+
+entity RatingResponse {
+  * id : Long <<PK, FK>>
+  --
+  rating : Integer
+}
+
+entity WordCloudResponse {
+  * id : Long <<PK, FK>>
+  --
+  text : String
+}
+
+User ||--o{ Poll : owns
+User ||--o{ Response : submits
+
+Poll ||--o{ MCQOption : has
+Poll ||--o{ Response : receives
+Poll ..> PollType : type
+
+Poll ||--o| MCQPoll : extends
+Poll ||--o| RatingPoll : extends
+Poll ||--o| WordCloudPoll : extends
+
+Response ||--o| MCQResponse : extends
+Response ||--o| RatingResponse : extends
+Response ||--o| WordCloudResponse : extends
+
+MCQOption ||--o{ MCQResponse : chosen by
+
+@enduml
