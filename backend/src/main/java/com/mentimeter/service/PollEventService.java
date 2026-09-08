@@ -6,8 +6,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.springframework.http.MediaType;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import com.mentimeter.dto.PollVoteEvent;
 
 @Component
 public class PollEventService {
@@ -26,6 +29,11 @@ public class PollEventService {
         emitter.onError(e -> cleanup.run());
 
         return emitter;
+    }
+
+    @KafkaListener(topics = "${mentimeter.kafka.poll-vote-events-topic}")
+    public void onPollVoteEvent(PollVoteEvent event) {
+        notifyVote(event.pollId(), event.results());
     }
 
     public void notifyVote(Long pollId, Object resultsPayload) {

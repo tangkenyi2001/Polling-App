@@ -37,14 +37,14 @@ public class ResponseService {
     private final RatingPollRepository ratingPollRepository;
     private final RatingResponseRepository ratingResponseRepository;
     private final WordCloudResponseRepository wordCloudResponseRepository;
-    private final PollEventService pollEventService;
+    private final PollVoteProducer pollVoteProducer;
     private final PollResultsService pollResultsService;
 
     public ResponseService(PollRepository pollRepository, UserRepository userRepository,
             ResponseRepository responseRepository, MCQOptionRepository mcqOptionRepository,
             MCQResponseRepository mcqResponseRepository, RatingPollRepository ratingPollRepository,
             RatingResponseRepository ratingResponseRepository,
-            WordCloudResponseRepository wordCloudResponseRepository, PollEventService pollEventService,
+            WordCloudResponseRepository wordCloudResponseRepository, PollVoteProducer pollVoteProducer,
             PollResultsService pollResultsService) {
         this.pollRepository = pollRepository;
         this.userRepository = userRepository;
@@ -54,7 +54,7 @@ public class ResponseService {
         this.ratingPollRepository = ratingPollRepository;
         this.ratingResponseRepository = ratingResponseRepository;
         this.wordCloudResponseRepository = wordCloudResponseRepository;
-        this.pollEventService = pollEventService;
+        this.pollVoteProducer = pollVoteProducer;
         this.pollResultsService = pollResultsService;
     }
 
@@ -74,7 +74,7 @@ public class ResponseService {
         mcqResponse.setResponse(response);
         mcqResponse.setMcqOption(option);
         MCQResponse saved = mcqResponseRepository.save(mcqResponse);
-        pollEventService.notifyVote(pollId, pollResultsService.computeResults(pollId));
+        pollVoteProducer.publish(pollId, pollResultsService.computeResults(pollId));
         return saved;
     }
 
@@ -95,7 +95,7 @@ public class ResponseService {
         ratingResponse.setResponse(response);
         ratingResponse.setRating(rating);
         RatingResponse saved = ratingResponseRepository.save(ratingResponse);
-        pollEventService.notifyVote(pollId, pollResultsService.computeResults(pollId));
+        pollVoteProducer.publish(pollId, pollResultsService.computeResults(pollId));
         return saved;
     }
 
@@ -109,7 +109,7 @@ public class ResponseService {
         wordCloudResponse.setResponse(response);
         wordCloudResponse.setText(text);
         WordCloudResponse saved = wordCloudResponseRepository.save(wordCloudResponse);
-        pollEventService.notifyVote(pollId, pollResultsService.computeResults(pollId));
+        pollVoteProducer.publish(pollId, pollResultsService.computeResults(pollId));
         return saved;
     }
 

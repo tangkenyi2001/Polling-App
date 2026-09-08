@@ -8,3 +8,12 @@ backend/target/
 
 # OS
 .DS_Store
+
+# Secrets
+.env
+
+# Claude Code local settings (personal, not shared project config)
+.claude/settings.local.json
+
+# Kafka TLS trust material (environment-specific, regenerate locally - see docs/sse-design.md)
+backend/src/main/resources/kafka/

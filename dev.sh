@@ -12,6 +12,15 @@ if [ ! -d "$FRONTEND_DIR" ]; then
   exit 1
 fi
 
+if [ -f "$SCRIPT_DIR/.env" ]; then
+  set -a
+  # shellcheck disable=SC1091
+  source "$SCRIPT_DIR/.env"
+  set +a
+else
+  echo ".env not found at $SCRIPT_DIR/.env - Kafka env vars (KAFKA_USERNAME, KAFKA_PASSWORD) won't be set" >&2
+fi
+
 free_port() {
   local port="$1"
   local port_pids
